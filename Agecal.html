@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultimate Age Calculator</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #eef2f3; display: flex; justify-content: center; padding-top: 50px; }
+        .container { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; }
+        h2 { color: #333; margin-bottom: 20px; }
+        label { display: block; text-align: left; margin-bottom: 5px; font-weight: bold; color: #555; }
+        input { width: 100%; padding: 12px; margin-bottom: 20px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 16px; }
+        button { width: 100%; padding: 15px; background: #4a90e2; color: white; border: none; border-radius: 8px; font-size: 18px; cursor: pointer; transition: 0.3s; }
+        button:hover { background: #357abd; }
+        #result { margin-top: 25px; padding: 15px; border-radius: 8px; background: #f9f9f9; display: none; }
+        .age-number { font-size: 24px; font-weight: bold; color: #4a90e2; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>🎂 Age Calculator</h2>
+    
+    <label>Date of Birth:</label>
+    <input type="date" id="dob">
+
+    <label>Calculate age at the date of:</label>
+    <input type="date" id="targetDate">
+
+    <button onclick="calculateAge()">Calculate Age</button>
+
+    <div id="result">
+        <div id="textOutput"></div>
+    </div>
+</div>
+
+<script>
+    // Set the default "Target Date" to today's date automatically
+    document.getElementById('targetDate').valueAsDate = new Date();
+
+    function calculateAge() {
+        const dobInput = document.getElementById('dob').value;
+        const targetInput = document.getElementById('targetDate').value;
+        const resultDiv = document.getElementById('result');
+        const textOutput = document.getElementById('textOutput');
+
+        if (!dobInput || !targetInput) {
+            alert("Please select both dates!");
+            return;
+        }
+
+        const birthDate = new Date(dobInput);
+        const targetDate = new Date(targetInput);
+
+        let years = targetDate.getFullYear() - birthDate.getFullYear();
+        let months = targetDate.getMonth() - birthDate.getMonth();
+        let days = targetDate.getDate() - birthDate.getDate();
+
+        // Adjust if the birthday hasn't happened yet in the target year
+        if (months < 0 || (months === 0 && days < 0)) {
+            years--;
+            months += 12;
+        }
+        
+        // Adjust days if negative
+        if (days < 0) {
+            const prevMonth = new Date(targetDate.getFullYear(), targetDate.getMonth(), 0);
+            days += prevMonth.getDate();
+            months--;
+        }
+
+        resultDiv.style.display = "block";
+        
+        if (years < 0) {
+            textOutput.innerHTML = "❌ The target date is before the birth date!";
+        } else {
+            textOutput.innerHTML = `
+                <p>You are</p>
+                <div class="age-number">${years} Years</div>
+                <p>${months} months and ${days} days old</p>
+            `;
+        }
+    }
+</script>
+
+</body>
+</html>
